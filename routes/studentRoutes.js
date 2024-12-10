@@ -27,11 +27,10 @@ router.get("/users/:id", async (req, res) => {
   }
 });
 
-// POST - /users
 router.post("/users", async (req, res) => {
   const { firstName, lastName, email, userClass } = req.body;
   if (!firstName || !lastName || !email || !userClass) {
-    res.status(400).json({ message: "Töltse ki az összes mezőt!" });
+    return res.status(400).json({ message: "Töltse ki az összes mezőt!" });
   }
   try {
     const result = await RunDb(
@@ -44,25 +43,27 @@ router.post("/users", async (req, res) => {
   }
 });
 
+
 // PUT - /users/:id
-router.put("user/id", async (req, res) => {
+router.put("/users/:id", async (req, res) => {
   const userId = req.params.id;
   const { firstName, lastName, email, userClass } = req.body;
   if (!firstName || !lastName || !email || !userClass) {
-    res.status(400).json({ message });
+    return res.status(400).json({ message: "Töltse ki az összes mezőt!" });
   }
   try {
     const result = await RunDb(
       "UPDATE Users SET firstName = ?, lastName = ?, email = ?, userClass = ? WHERE id = ?",
       [firstName, lastName, email, userClass, userId]
     );
+    res.json(result);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
 // DELETE - /users/:id
-router.delete("user/id", async (req, res) => {
+router.delete("/users/:id", async (req, res) => {
   const userId = req.params.id;
   try {
     const result = await RunDb("DELETE FROM Users WHERE id = ?", [userId]);

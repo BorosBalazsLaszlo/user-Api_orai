@@ -11,7 +11,9 @@ const PORT = 3000;
 
 async function startServer() {
   try {
-    const swaggerFile = await readFile(new URL("./swagger_output.json", import.meta.url));
+    const swaggerFile = await readFile(
+      new URL("./swagger_output.json", import.meta.url)
+    );
     let swaggerDocument;
     try {
       swaggerDocument = JSON.parse(swaggerFile);
@@ -22,7 +24,7 @@ async function startServer() {
     app.use(bodyParser.json());
     app.use(cors());
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    app.use("/api/users", studentRoutes);
+    app.use("/api", studentRoutes);
 
     await DbInit();
     console.log("Adatbázis inicializálva");
